@@ -10,6 +10,8 @@ import {
   NavigatorScreenParams,
 } from '@react-navigation/native';
 
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import DiaryScreen from './DiaryScreen';
 import EncyclopediaScreen from './EncyclopediaScreen';
 import QnaScreen from './QnaScreen';
@@ -38,9 +40,36 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 export default function MainTab() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Encyclopedia" component={EncyclopediaScreen} />
-      <Tab.Screen name="Diary" component={DiaryScreen} />
-      <Tab.Screen name="QnA" component={QnaScreen} />
+      <Tab.Screen
+        name="Encyclopedia"
+        component={EncyclopediaScreen}
+        options={{
+          title: '거북이 사전',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="library-books" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Diary"
+        component={DiaryScreen}
+        options={{
+          title: '다이어리',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="book" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="QnA"
+        component={QnaScreen}
+        options={{
+          title: '질문 답변',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="question-answer" color={color} size={size} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }
