@@ -1,11 +1,12 @@
 import React from 'react';
-import {SafeAreaView, Text} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import RootStack from './screens/RootStack';
 
 function App(): JSX.Element {
   return (
-    <SafeAreaView>
-      <Text>초기화</Text>
-    </SafeAreaView>
+    <NavigationContainer>
+      <RootStack />
+    </NavigationContainer>
   );
 }
 
