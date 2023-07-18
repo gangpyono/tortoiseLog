@@ -35,6 +35,7 @@ export default function PetList({pets}: PetListProps) {
           </View>
         </View>
       )}
+      keyExtractor={item => item.id.toString()}
     />
   );
 }
