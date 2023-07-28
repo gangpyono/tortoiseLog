@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import BorderedInput from '../components/BorderedInput';
 import {RootStackNavigationProp} from './RootStack';
 
 interface Props {}
@@ -44,8 +45,7 @@ export default function SignInScreen({}: Props) {
       behavior={Platform.select({ios: 'padding'})}>
       <SafeAreaView style={styles.block}>
         <View style={styles.form}>
-          <TextInput
-            style={styles.input}
+          <BorderedInput
             keyboardType="email-address"
             autoCapitalize="none"
             placeholder="이메일을 입력하세요"
@@ -54,9 +54,8 @@ export default function SignInScreen({}: Props) {
             onChangeText={createChangeTextHandler('email')}
             onSubmitEditing={focusPasswordInput}
           />
-          <TextInput
+          <BorderedInput
             ref={passwordRef}
-            style={styles.input}
             placeholder="비밀번호를 입력하세요"
             secureTextEntry
             returnKeyType="done"
@@ -88,14 +87,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  input: {
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#bdbdbd',
-    height: 48,
-    paddingHorizontal: 16,
-    borderRadius: 8,
   },
   form: {
     width: '100%',
