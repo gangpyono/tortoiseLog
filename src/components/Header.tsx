@@ -36,7 +36,6 @@ export default function Header({title}: Props) {
 const styles = StyleSheet.create({
   block: {
     flexDirection: 'row',
-    padding: 4,
     alignItems: 'center',
   },
   leftMargin: {marginLeft: 4},
