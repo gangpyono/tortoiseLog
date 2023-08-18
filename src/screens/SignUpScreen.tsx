@@ -12,6 +12,7 @@ import {color, spacing} from '../../theme/style';
 import BorderedInput from '../components/BorderedInput';
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
+import {signUp} from '../lib/auth';
 
 const EMAIL_ERROR_MESSAGE = '이메일 양식을 확인해주세요.';
 const PASSWORD_ERROR_MESSAGE = '영문/숫자/특수문자 2가지 이상 조합(8~20자)';
@@ -43,6 +44,7 @@ export default function SignUpScreen() {
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
   const emailRef = useRef<TextInput | null>(null);
+  const [loading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState({
     email: '',
@@ -140,8 +142,15 @@ export default function SignUpScreen() {
     }
   };
 
-  const onSubmit = () => {
-    console.log('hit onSubmit');
+  const onSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const res = await signUp({email: form.email, password: form.password});
+      console.log(res, 'signUp result');
+    } catch (error: any) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isActiveSubmitButton = () => {
@@ -246,6 +255,7 @@ export default function SignUpScreen() {
           <CustomButton
             title="회원가입"
             onPress={onSubmit}
+            loading={loading}
             disabled={!isActiveSubmitButton()}
           />
         </View>
