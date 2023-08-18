@@ -181,6 +181,7 @@ export default function SignUpScreen() {
                 hasError={!!formErrors.email}
                 value={form.email}
                 keyboardType="email-address"
+                autoComplete="email"
                 autoCapitalize="none"
                 placeholder="이메일을 입력하세요."
                 onChangeText={createChangeTextHandler('email')}
@@ -212,6 +213,7 @@ export default function SignUpScreen() {
                 onChangeText={createChangeTextHandler('password')}
                 onSubmitEditing={onSubmitEditingPassword}
                 onBlur={onSubmitEditingPassword}
+                textContentType="oneTimeCode" // ios "strong password" 방지
                 returnKeyType="next"
               />
               <View style={styles.messageLayout}>
@@ -240,6 +242,7 @@ export default function SignUpScreen() {
                 onChangeText={createChangeTextHandler('passwordConfirm')}
                 onSubmitEditing={onSubmitEditingPasswordConfirm}
                 onBlur={onSubmitEditingPasswordConfirm}
+                textContentType="oneTimeCode" // ios "strong password" 방지
                 returnKeyType="next"
               />
               <View style={styles.messageLayout}>
