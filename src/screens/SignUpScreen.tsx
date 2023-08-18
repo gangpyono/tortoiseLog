@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color, spacing} from '../../theme/style';
+import {color, spacing} from '../theme/style';
 import BorderedInput from '../components/BorderedInput';
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';

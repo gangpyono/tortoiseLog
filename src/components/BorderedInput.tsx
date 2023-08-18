@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TextInput, TextInputProps} from 'react-native';
-import {color} from '../../theme/style';
+import {color} from '../theme/style';
 
 interface Props extends TextInputProps {
   hasError?: boolean;

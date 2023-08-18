@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {color} from '../../theme/style';
+import {color} from '../theme/style';
 import {RootStackNavigationProp} from '../screens/RootStack';
 
 interface Props {
