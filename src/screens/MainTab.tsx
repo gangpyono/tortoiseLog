@@ -39,7 +39,7 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export default function MainTab() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName="Diary">
       <Tab.Screen
         name="Encyclopedia"
         component={EncyclopediaScreen}
