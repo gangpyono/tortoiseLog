@@ -8,18 +8,36 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {spacing} from '../../theme/style';
+import {color, spacing} from '../../theme/style';
 import BorderedInput from '../components/BorderedInput';
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
-import RadioGroup, {RadioOptionType} from '../components/Radio';
 
-const radioOptions = [
-  {id: '1', label: '네이버 카페'},
-  {id: '2', label: '카카오톡 오픈채팅'},
-  {id: '3', label: '검색'},
-  {id: '4', label: '기타'},
-];
+const EMAIL_ERROR_MESSAGE = '이메일 양식을 확인해주세요.';
+const PASSWORD_ERROR_MESSAGE = '영문/숫자/특수문자 2가지 이상 조합(8~20자)';
+const PASSWORD_COMMENT = '영문/숫자/특수문자 2가지 이상 조합(8~20자)';
+const PASSWORD_CONFIRM_ERROR_MESSAGE = '비밀번호와 일치하지 않습니다.';
+
+const emailPattern = /^[a-zA-z0-9._+-]+@[a-zA-Z0-9-]+\.[a-z.]+$/;
+const alphabetPattern = /[a-zA-Z]/;
+const numberPattern = /[0-9]/;
+const specialCharacterPattern = /[\W]/;
+
+const isCorrectLengthRange = (value: string) => {
+  return value.length >= 8 && value.length <= 20;
+};
+
+const hasAlphabet = (value: string) => {
+  return alphabetPattern.test(value);
+};
+
+const hasNumber = (value: string) => {
+  return numberPattern.test(value);
+};
+
+const hasSpecialCharacter = (value: string) => {
+  return specialCharacterPattern.test(value);
+};
 
 export default function SignUpScreen() {
   const passwordRef = useRef<TextInput | null>(null);
@@ -27,32 +45,19 @@ export default function SignUpScreen() {
   const emailRef = useRef<TextInput | null>(null);
 
   const [form, setForm] = useState({
-    username: '',
+    email: '',
     password: '',
     passwordConfirm: '',
+  });
+
+  const [formErrors, setFormErrors] = useState({
     email: '',
-    funnel: '',
+    password: '',
+    passwordConfirm: '',
   });
-
-  const [errors, setErrors] = useState({
-    username: '아이디오류',
-    password: '비밀번호오류',
-    passwordConfirm: '비밀번호 확인 오류',
-    email: '이메일 오류',
-  });
-
-  const [isOpenFunnelTextInput, setIsOpenFunnelTextInput] = useState(false);
 
   const createChangeTextHandler = (name: string) => (value: string) => {
     setForm(prev => ({...prev, [name]: value}));
-  };
-
-  const handleRadioChange = (selected: RadioOptionType) => {
-    selected.id === '4'
-      ? setIsOpenFunnelTextInput(true)
-      : setIsOpenFunnelTextInput(false);
-
-    setForm(prev => ({...prev, funnel: selected.label}));
   };
 
   const focusTextInput = (ref: React.MutableRefObject<TextInput | null>) => {
@@ -61,24 +66,90 @@ export default function SignUpScreen() {
     }
   };
 
-  const usernameValidate = () => {
-    console.log('usernameValidate');
+  const emailValidate = (value: string) => {
+    return emailPattern.test(value);
   };
 
-  const passwordValidate = () => {
-    console.log('passwordValidate');
+  const onSubmitEditingEmail = () => {
+    if (emailValidate(form.email)) {
+      setFormErrors(prev => ({
+        ...prev,
+        email: '',
+      }));
+      focusTextInput(passwordRef);
+    } else {
+      setFormErrors(prev => ({
+        ...prev,
+        email: EMAIL_ERROR_MESSAGE,
+      }));
+    }
   };
 
-  const passwordConfirmValidate = () => {
-    console.log('passwordConfirmValidate');
+  const passwordValidate = (value: string) => {
+    if (!isCorrectLengthRange(value)) {
+      return;
+    }
+
+    let score = 0;
+    const inCrementScore = () => (score = score + 1);
+    if (hasAlphabet(value)) {
+      inCrementScore();
+    }
+
+    if (hasNumber(value)) {
+      inCrementScore();
+    }
+
+    if (hasSpecialCharacter(value)) {
+      inCrementScore();
+    }
+
+    return score >= 2;
   };
 
-  const emailValidate = () => {
-    console.log('emailValidate');
+  const onSubmitEditingPassword = () => {
+    if (passwordValidate(form.password)) {
+      setFormErrors(prev => ({
+        ...prev,
+        password: '',
+      }));
+      focusTextInput(passwordConfirmRef);
+    } else {
+      setFormErrors(prev => ({
+        ...prev,
+        password: PASSWORD_ERROR_MESSAGE,
+      }));
+    }
+  };
+
+  const passwordConfirmValidate = (value: string) => {
+    return value === form.password;
+  };
+
+  const onSubmitEditingPasswordConfirm = () => {
+    if (passwordConfirmValidate(form.passwordConfirm)) {
+      setFormErrors(prev => ({
+        ...prev,
+        passwordConfirm: '',
+      }));
+    } else {
+      setFormErrors(prev => ({
+        ...prev,
+        passwordConfirm: PASSWORD_CONFIRM_ERROR_MESSAGE,
+      }));
+    }
   };
 
   const onSubmit = () => {
-    console.log('form :>> ', form);
+    console.log('hit onSubmit');
+  };
+
+  const isActiveSubmitButton = () => {
+    return (
+      emailValidate(form.email) &&
+      passwordValidate(form.password) &&
+      passwordConfirmValidate(form.passwordConfirm)
+    );
   };
 
   return (
@@ -89,95 +160,94 @@ export default function SignUpScreen() {
         <Header title="회원가입" />
 
         <View style={styles.form}>
-          <View>
-            <View style={styles.formFieldWapper}>
-              <Text style={styles.formFieldLabel}>아이디: </Text>
-              <View style={styles.formFieldText}>
-                <BorderedInput
-                  value={form.username}
-                  placeholder="아이디를 입력하세요."
-                  onChangeText={createChangeTextHandler('username')}
-                  onSubmitEditing={() => focusTextInput(passwordRef)}
-                  onBlur={usernameValidate}
-                />
+          <View style={styles.formFieldWrapper}>
+            <View style={styles.formFieldLabelWrapper}>
+              <View style={styles.formFieldLabelInner}>
+                <Text>이메일(아이디)</Text>
               </View>
             </View>
-            {errors.username && <Text>{errors.username}</Text>}
-          </View>
-
-          <View>
-            <View style={styles.formFieldWapper}>
-              <Text style={styles.formFieldLabel}>비밀번호: </Text>
-              <View style={styles.formFieldText}>
-                <BorderedInput
-                  ref={passwordRef}
-                  value={form.password}
-                  placeholder="비밀번호를 입력하세요."
-                  secureTextEntry
-                  onChangeText={createChangeTextHandler('password')}
-                  onSubmitEditing={() => focusTextInput(passwordConfirmRef)}
-                  returnKeyType="next"
-                  onBlur={passwordValidate}
-                />
+            <View style={styles.formFieldInput}>
+              <BorderedInput
+                ref={emailRef}
+                hasError={!!formErrors.email}
+                value={form.email}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                placeholder="이메일을 입력하세요."
+                onChangeText={createChangeTextHandler('email')}
+                onSubmitEditing={onSubmitEditingEmail}
+                onBlur={onSubmitEditingEmail}
+                returnKeyType="next"
+              />
+              <View style={styles.messageLayout}>
+                {formErrors.email && (
+                  <Text style={styles.errorMessage}>{formErrors.email}</Text>
+                )}
               </View>
             </View>
-            {errors.password && <Text>{errors.password}</Text>}
           </View>
 
-          <View>
-            <View style={styles.formFieldWapper}>
-              <Text style={styles.formFieldLabel}>비밀번호 확인: </Text>
-              <View style={styles.formFieldText}>
-                <BorderedInput
-                  ref={passwordConfirmRef}
-                  value={form.passwordConfirm}
-                  placeholder="비밀번호를 다시한번 입력해주세요."
-                  secureTextEntry
-                  onChangeText={createChangeTextHandler('passwordConfirm')}
-                  onSubmitEditing={() => focusTextInput(emailRef)}
-                  returnKeyType="next"
-                  onBlur={passwordConfirmValidate}
-                />
+          <View style={styles.formFieldWrapper}>
+            <View style={styles.formFieldLabelWrapper}>
+              <View style={styles.formFieldLabelInner}>
+                <Text>비밀번호</Text>
               </View>
             </View>
-            {errors.passwordConfirm && <Text>{errors.passwordConfirm}</Text>}
-          </View>
-
-          <View>
-            <View style={styles.formFieldWapper}>
-              <Text style={styles.formFieldLabel}>이메일: </Text>
-              <View style={styles.formFieldText}>
-                <BorderedInput
-                  ref={emailRef}
-                  value={form.email}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  placeholder="이메일을 입력하세요."
-                  onChangeText={createChangeTextHandler('email')}
-                  onBlur={emailValidate}
-                  returnKeyType="next"
-                />
+            <View style={styles.formFieldInput}>
+              <BorderedInput
+                ref={passwordRef}
+                hasError={!!formErrors.password}
+                value={form.password}
+                placeholder="비밀번호를 입력하세요."
+                secureTextEntry
+                onChangeText={createChangeTextHandler('password')}
+                onSubmitEditing={onSubmitEditingPassword}
+                onBlur={onSubmitEditingPassword}
+                returnKeyType="next"
+              />
+              <View style={styles.messageLayout}>
+                {formErrors.password ? (
+                  <Text style={styles.errorMessage}>{formErrors.password}</Text>
+                ) : (
+                  <Text style={styles.commentMessage}>{PASSWORD_COMMENT}</Text>
+                )}
               </View>
             </View>
-            {errors.email && <Text>{errors.email}</Text>}
           </View>
-        </View>
 
-        <View>
-          <Text>알게된 경로를 선택해주세요.</Text>
-          <View style={styles.radioGroupContainer}>
-            <RadioGroup options={radioOptions} onPress={handleRadioChange} />
+          <View style={styles.formFieldWrapper}>
+            <View style={styles.formFieldLabelWrapper}>
+              <View style={styles.formFieldLabelInner}>
+                <Text>비밀번호 확인</Text>
+              </View>
+            </View>
+            <View style={styles.formFieldInput}>
+              <BorderedInput
+                ref={passwordConfirmRef}
+                hasError={!!formErrors.passwordConfirm}
+                value={form.passwordConfirm}
+                placeholder="비밀번호를 다시한번 입력해주세요."
+                secureTextEntry
+                onChangeText={createChangeTextHandler('passwordConfirm')}
+                onSubmitEditing={onSubmitEditingPasswordConfirm}
+                onBlur={onSubmitEditingPasswordConfirm}
+                returnKeyType="next"
+              />
+              <View style={styles.messageLayout}>
+                {formErrors.passwordConfirm && (
+                  <Text style={styles.errorMessage}>
+                    {formErrors.passwordConfirm}
+                  </Text>
+                )}
+              </View>
+            </View>
           </View>
-          {isOpenFunnelTextInput && (
-            <BorderedInput
-              placeholder="기타 유입경로"
-              onChangeText={createChangeTextHandler('funnel')}
-            />
-          )}
-        </View>
 
-        <View style={styles.buttonWrapper}>
-          <CustomButton title="회원가입" onPress={onSubmit} />
+          <CustomButton
+            title="회원가입"
+            onPress={onSubmit}
+            disabled={!isActiveSubmitButton()}
+          />
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -191,23 +261,31 @@ const styles = StyleSheet.create({
   block: {
     flex: 1,
     backgroundColor: '#ffffff',
+
     paddingHorizontal: spacing.Horizontal,
   },
-  form: {marginTop: 10, gap: 20},
-
-  formFieldWapper: {flexDirection: 'row', alignItems: 'center'},
-  formFieldLabel: {flexBasis: '30%'},
-  formFieldText: {flex: 1},
-
-  wrapper: {flexDirection: 'row', gap: 8},
-  inputWrapper: {
+  form: {
     flex: 1,
-    flexBasis: '60%',
+    gap: 24,
   },
-
-  buttonWrapper: {
+  formFieldWrapper: {flexDirection: 'row', gap: 10},
+  formFieldLabelWrapper: {
+    flexBasis: '26%',
+    flexDirection: 'row',
+  },
+  formFieldLabelInner: {
     height: 44,
+    justifyContent: 'center',
+  },
+  formFieldInput: {flex: 1},
+  messageLayout: {marginTop: 4},
+  errorMessage: {
+    fontSize: 12,
+    color: color.error,
   },
 
-  radioGroupContainer: {},
+  commentMessage: {
+    fontSize: 12,
+    color: 'grey',
+  },
 });
