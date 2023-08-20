@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "19808031060",
+    "project_id": "tortoiselog",
+    "storage_bucket": "tortoiselog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19808031060:android:49f3305ff07e06c8b278c1",
+        "android_client_info": {
+          "package_name": "com.tortoiselog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19808031060-4dpqtom1p14b59nlqspg6ihmbl8uumto.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tortoiselog",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "19808031060-bqift9iboq6i57403qtjqpt2rbk07n3k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFU9telYyiaomGAcQNDGGrF1tkd0xBIOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19808031060-bqift9iboq6i57403qtjqpt2rbk07n3k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
