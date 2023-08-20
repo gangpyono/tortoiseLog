@@ -62,6 +62,7 @@ export default function SignUpScreen() {
 
   const createChangeTextHandler = (name: string) => (value: string) => {
     setForm(prev => ({...prev, [name]: value}));
+    setFormErrors(prev => ({...prev, [name]: ''}));
   };
 
   const focusTextInput = (ref: React.MutableRefObject<TextInput | null>) => {
