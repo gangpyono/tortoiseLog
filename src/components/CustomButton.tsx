@@ -1,13 +1,30 @@
 import React from 'react';
-import {Platform, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 interface Props {
   onPress: () => void;
   title: string;
   disabled?: boolean;
+  loading?: boolean;
 }
 
-export default function CustomButton({onPress, title, disabled}: Props) {
+export default function CustomButton({
+  onPress,
+  title,
+  disabled,
+  loading,
+}: Props) {
+  if (loading) {
+    return <ActivityIndicator size={32} color="#5CB15A" />;
+  }
+
   return (
     <View style={styles.block}>
       <Pressable
