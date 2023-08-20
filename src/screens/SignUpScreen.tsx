@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -13,6 +14,7 @@ import BorderedInput from '../components/BorderedInput';
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
 import {signUp} from '../lib/auth';
+import {firebaseAuthErrorMessage, isNativeFirebaseError} from '../utils/error';
 
 const EMAIL_ERROR_MESSAGE = '이메일 양식을 확인해주세요.';
 const PASSWORD_ERROR_MESSAGE = '영문/숫자/특수문자 2가지 이상 조합(8~20자)';
@@ -146,8 +148,28 @@ export default function SignUpScreen() {
     setIsLoading(true);
     try {
       const res = await signUp({email: form.email, password: form.password});
-      console.log(res, 'signUp result');
-    } catch (error: any) {
+    } catch (error) {
+      if (isNativeFirebaseError(error)) {
+        const msg = firebaseAuthErrorMessage[error.code] || '회원가입 실패';
+
+        if (
+          msg === EMAIL_ERROR_MESSAGE ||
+          msg === '이미 가입된 이메일 입니다.'
+        ) {
+          setFormErrors(prev => ({...prev, email: msg}));
+
+          return;
+        }
+
+        if (msg === PASSWORD_ERROR_MESSAGE) {
+          setFormErrors(prev => ({...prev, password: msg}));
+
+          return;
+        }
+
+        // sentry trigger
+        Alert.alert('관리자에게 문의 주세요.', msg);
+      }
     } finally {
       setIsLoading(false);
     }
