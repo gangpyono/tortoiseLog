@@ -179,13 +179,10 @@ export default function SignUpScreen() {
     }
   };
 
-  const isActiveSubmitButton = () => {
-    return (
-      emailValidate(form.email) &&
-      passwordValidate(form.password) &&
-      passwordConfirmValidate(form.passwordConfirm)
-    );
-  };
+  const isActiveSubmitButton =
+    emailValidate(form.email) &&
+    passwordValidate(form.password) &&
+    passwordConfirmValidate(form.passwordConfirm);
 
   return (
     <KeyboardAvoidingView
@@ -285,7 +282,7 @@ export default function SignUpScreen() {
             title="회원가입"
             onPress={onSubmit}
             loading={loading}
-            disabled={!isActiveSubmitButton()}
+            disabled={!isActiveSubmitButton}
           />
         </View>
       </SafeAreaView>
