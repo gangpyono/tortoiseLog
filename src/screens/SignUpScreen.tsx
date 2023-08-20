@@ -14,17 +14,20 @@ import BorderedInput from '../components/BorderedInput';
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
 import {signUp} from '../lib/auth';
-import {firebaseAuthErrorMessage, isNativeFirebaseError} from '../utils/error';
-
-const EMAIL_ERROR_MESSAGE = '이메일 양식을 확인해주세요.';
-const PASSWORD_ERROR_MESSAGE = '영문/숫자/특수문자 2가지 이상 조합(8~20자)';
-const PASSWORD_COMMENT = '영문/숫자/특수문자 2가지 이상 조합(8~20자)';
-const PASSWORD_CONFIRM_ERROR_MESSAGE = '비밀번호와 일치하지 않습니다.';
-
-const emailPattern = /^[a-zA-z0-9._+-]+@[a-zA-Z0-9-]+\.[a-z.]+$/;
-const alphabetPattern = /[a-zA-Z]/;
-const numberPattern = /[0-9]/;
-const specialCharacterPattern = /[\W]/;
+import {
+  EMAIL_ERROR_MESSAGE,
+  firebaseAuthErrorMessage,
+  isNativeFirebaseError,
+  PASSWORD_COMMENT,
+  PASSWORD_CONFIRM_ERROR_MESSAGE,
+  PASSWORD_ERROR_MESSAGE,
+} from '../utils/error';
+import {
+  alphabetPattern,
+  emailPattern,
+  numberPattern,
+  specialCharacterPattern,
+} from '../utils/regex';
 
 const isCorrectLengthRange = (value: string) => {
   return value.length >= 8 && value.length <= 20;
