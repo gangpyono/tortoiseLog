@@ -11,8 +11,15 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import BorderedInput from '../components/BorderedInput';
 import CustomButton from '../components/CustomButton';
+import {signIn} from '../lib/auth';
 import {color} from '../theme/style';
-import {EMAIL_ERROR_MESSAGE} from '../utils/error';
+import {
+  EMAIL_ERROR_MESSAGE,
+  firebaseAuthErrorMessage,
+  isNativeFirebaseError,
+  TOO_MANY_REQUESTS,
+  UNEXPECTED_ERROR,
+} from '../utils/error';
 import {emailPattern} from '../utils/regex';
 import {RootStackNavigationProp} from './RootStack';
 
@@ -21,6 +28,7 @@ export default function SignInScreen() {
 
   const [form, setForm] = useState({email: '', password: ''});
   const [formError, setFormError] = useState('');
+  const [loading, setIsLoading] = useState(false);
   const passwordRef = useRef<TextInput | null>(null);
 
   const createChangeTextHandler = (name: string) => (value: string) => {
@@ -44,7 +52,26 @@ export default function SignInScreen() {
       : setFormError(EMAIL_ERROR_MESSAGE);
   };
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    setIsLoading(true);
+    try {
+      await signIn({...form});
+      navigation.navigate('MainTab', {screen: 'Diary'});
+    } catch (error) {
+      if (isNativeFirebaseError(error)) {
+        const msg = firebaseAuthErrorMessage[error.code] || UNEXPECTED_ERROR;
+        if (msg === TOO_MANY_REQUESTS || msg === UNEXPECTED_ERROR) {
+          setFormError(msg);
+          // TODO: sentry trigger
+          return;
+        }
+
+        setFormError('이메일 혹은 비밀번호를 확인해주세요.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const goSignUpScreen = () => {
     navigation.navigate('SignUp');
@@ -77,7 +104,7 @@ export default function SignInScreen() {
           />
           {formError && <Text style={styles.errorMessage}>{formError}</Text>}
           <View style={styles.buttonsBlock}>
-            <CustomButton title="로그인" onPress={onSubmit} />
+            <CustomButton title="로그인" onPress={onSubmit} loading={loading} />
             <CustomButton title="회원가입" onPress={goSignUpScreen} />
           </View>
         </View>
