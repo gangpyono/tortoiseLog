@@ -3,7 +3,6 @@ import React, {useRef, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -11,29 +10,25 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import BorderedInput from '../components/BorderedInput';
+import CustomButton from '../components/CustomButton';
+import {color} from '../theme/style';
 import {RootStackNavigationProp} from './RootStack';
 
-interface Props {}
-
-export default function SignInScreen({}: Props) {
+export default function SignInScreen() {
   const navigation = useNavigation<RootStackNavigationProp>();
 
   const [form, setForm] = useState({email: '', password: ''});
+  const [formError, setFormError] = useState('');
+  const passwordRef = useRef<TextInput | null>(null);
 
   const createChangeTextHandler = (name: string) => (value: string) => {
     setForm({...form, [name]: value});
+    setFormError('');
   };
 
-  const passwordRef = useRef<TextInput | null>(null);
-  const focusPasswordInput = () => {
-    if (passwordRef.current) {
-      passwordRef.current.focus();
-    }
-  };
+  const onSubmitEditingEmail = () => {};
 
-  const onSubmit = () => {
-    console.log('form :>> ', form);
-  };
+  const onSubmit = async () => {};
 
   const goSignUpScreen = () => {
     navigation.navigate('SignUp');
@@ -52,7 +47,8 @@ export default function SignInScreen({}: Props) {
             returnKeyType="next"
             value={form.email}
             onChangeText={createChangeTextHandler('email')}
-            onSubmitEditing={focusPasswordInput}
+            onSubmitEditing={onSubmitEditingEmail}
+            onBlur={onSubmitEditingEmail}
           />
           <BorderedInput
             ref={passwordRef}
@@ -63,14 +59,10 @@ export default function SignInScreen({}: Props) {
             onChangeText={createChangeTextHandler('password')}
             onSubmitEditing={onSubmit}
           />
-
+          {formError && <Text style={styles.errorMessage}>{formError}</Text>}
           <View style={styles.buttonsBlock}>
-            <Pressable onPress={onSubmit}>
-              <Text>로그인</Text>
-            </Pressable>
-            <Pressable onPress={goSignUpScreen}>
-              <Text>회원가입 </Text>
-            </Pressable>
+            <CustomButton title="로그인" onPress={onSubmit} />
+            <CustomButton title="회원가입" onPress={goSignUpScreen} />
           </View>
         </View>
       </SafeAreaView>
@@ -94,8 +86,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   buttonsBlock: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 36,
+    gap: 4,
+  },
+  errorMessage: {
+    alignContent: 'center',
+    fontSize: 12,
+    color: color.error,
   },
 });
