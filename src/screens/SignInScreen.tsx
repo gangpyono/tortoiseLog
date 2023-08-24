@@ -12,6 +12,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import BorderedInput from '../components/BorderedInput';
 import CustomButton from '../components/CustomButton';
 import {color} from '../theme/style';
+import {EMAIL_ERROR_MESSAGE} from '../utils/error';
+import {emailPattern} from '../utils/regex';
 import {RootStackNavigationProp} from './RootStack';
 
 export default function SignInScreen() {
@@ -26,7 +28,21 @@ export default function SignInScreen() {
     setFormError('');
   };
 
-  const onSubmitEditingEmail = () => {};
+  const focusPasswordInput = () => {
+    if (passwordRef.current) {
+      passwordRef.current.focus();
+    }
+  };
+
+  const emailValidate = (value: string) => {
+    return emailPattern.test(value);
+  };
+
+  const onSubmitEditingEmail = () => {
+    emailValidate(form.email)
+      ? focusPasswordInput()
+      : setFormError(EMAIL_ERROR_MESSAGE);
+  };
 
   const onSubmit = async () => {};
 
