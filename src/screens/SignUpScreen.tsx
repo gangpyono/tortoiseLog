@@ -28,6 +28,8 @@ import {
   numberPattern,
   specialCharacterPattern,
 } from '../utils/regex';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackNavigationProp} from './RootStack';
 
 const isCorrectLengthRange = (value: string) => {
   return value.length >= 8 && value.length <= 20;
@@ -46,6 +48,7 @@ const hasSpecialCharacter = (value: string) => {
 };
 
 export default function SignUpScreen() {
+  const navigation = useNavigation<RootStackNavigationProp>();
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
   const emailRef = useRef<TextInput | null>(null);
@@ -148,10 +151,14 @@ export default function SignUpScreen() {
     }
   };
 
+  const goDiaryScreen = () => {
+    navigation.navigate('MainTab', {screen: 'Diary'});
+  };
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await signUp({email: form.email, password: form.password});
+      await signUp({email: form.email, password: form.password});
+      goDiaryScreen();
     } catch (error) {
       if (isNativeFirebaseError(error)) {
         const msg = firebaseAuthErrorMessage[error.code] || '회원가입 실패';

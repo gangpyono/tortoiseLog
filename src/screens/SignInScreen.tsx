@@ -52,11 +52,14 @@ export default function SignInScreen() {
       : setFormError(EMAIL_ERROR_MESSAGE);
   };
 
+  const goDiaryScreen = () => {
+    navigation.navigate('MainTab', {screen: 'Diary'});
+  };
   const onSubmit = async () => {
     setIsLoading(true);
     try {
       await signIn({...form});
-      navigation.navigate('MainTab', {screen: 'Diary'});
+      goDiaryScreen();
     } catch (error) {
       if (isNativeFirebaseError(error)) {
         const msg = firebaseAuthErrorMessage[error.code] || UNEXPECTED_ERROR;
