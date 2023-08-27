@@ -17,17 +17,25 @@ export default function ModalTriggerButton({
 }: ModalTriggerButtonProps) {
   const [modalVisible, setModalVisible] = useState(false);
 
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
   return (
     <>
-      {modalVisible && (
-        <Modal
-          description={description}
-          onClose={() => setModalVisible(false)}
-          onOk={() => onOk()}
-          okTitle={okTitle}
-        />
-      )}
-      <CustomButton title={title} onPress={() => setModalVisible(true)} />
+      <Modal
+        visible={modalVisible}
+        description={description}
+        onClose={() => closeModal()}
+        onOk={() => {
+          onOk();
+        }}
+        okTitle={okTitle}
+      />
+      <CustomButton title={title} onPress={() => openModal()} />
     </>
   );
 }
