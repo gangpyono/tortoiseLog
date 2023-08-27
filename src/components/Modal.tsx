@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Modal as ReactNativeModal,
-  Alert,
   Text,
   Pressable,
   StyleSheet,
@@ -14,17 +13,23 @@ interface Props {
   onOk: () => void;
   okTitle: string;
   description: string;
+  visible: boolean;
 }
 
-export default function Modal({onClose, onOk, okTitle, description}: Props) {
+export default function Modal({
+  onClose,
+  onOk,
+  okTitle,
+  description,
+  visible,
+}: Props) {
   return (
     <>
       <ReactNativeModal
         animationType="fade"
         transparent
-        visible
+        visible={visible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           onClose();
         }}>
         <View style={styles.mask}>
@@ -33,7 +38,10 @@ export default function Modal({onClose, onOk, okTitle, description}: Props) {
             <View style={styles.buttonWrapper}>
               <Pressable
                 style={[styles.button, styles.okButton]}
-                onPress={() => onOk()}>
+                onPress={() => {
+                  onOk();
+                  onClose();
+                }}>
                 <Text style={styles.textStyle}>{okTitle}</Text>
               </Pressable>
               <Pressable
