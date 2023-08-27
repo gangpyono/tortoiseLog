@@ -26,7 +26,7 @@ export default function DiaryScreen() {
   const goCreateScreen = () => {
     navigation.navigate('Create');
   };
-  const goSignUpScreen = () => {
+  const goSignInScreen = () => {
     navigation.navigate('SignIn');
   };
 
@@ -50,7 +50,7 @@ export default function DiaryScreen() {
           title="개체 등록하기"
           description="개체를 등록하기 위해선 로그인이 필요합니다."
           okTitle="로그인"
-          onOk={goSignUpScreen}
+          onOk={goSignInScreen}
         />
       )}
 
