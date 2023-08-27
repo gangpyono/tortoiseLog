@@ -55,10 +55,17 @@ export default function SignInScreen() {
   const goDiaryScreen = () => {
     navigation.navigate('MainTab', {screen: 'Diary'});
   };
+
   const onSubmit = async () => {
+    if (!form.email || !form.password) {
+      setFormError('모든값을 입력해주세요.');
+
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await signIn({...form});
+      await signIn({email: form.email, password: form.password});
       goDiaryScreen();
     } catch (error) {
       if (isNativeFirebaseError(error)) {
