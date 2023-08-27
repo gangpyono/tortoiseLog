@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Button, SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 
 import {RootStackNavigationProp} from '../RootStack';
 import Empty from '../../components/Empty';
 import PetList from '../../components/PetList';
 
-import auth from '@react-native-firebase/auth';
 import {useAuth} from '../../context/AuthContext';
 import ModalTriggerButton from './ModalTiggerButton';
 import CustomButton from '../../components/CustomButton';
@@ -26,21 +25,11 @@ export default function DiaryScreen() {
   const goCreateScreen = () => {
     navigation.navigate('Create');
   };
-
   const goSignInScreen = () => {
     navigation.navigate('SignIn');
   };
 
-  const logout = async () => {
-    try {
-      const res = await auth().signOut();
-      console.log('res :>> ', res);
-    } catch (error) {
-      console.log('error :>> ', error);
-    }
-  };
   const isEmpty = pets.length === 0;
-
   return (
     <SafeAreaView style={styles.block}>
       {isEmpty ? <Empty /> : <PetList pets={pets} />}
@@ -54,8 +43,6 @@ export default function DiaryScreen() {
           onOk={goSignInScreen}
         />
       )}
-
-      <Button title="로그 아웃" onPress={logout} />
     </SafeAreaView>
   );
 }
