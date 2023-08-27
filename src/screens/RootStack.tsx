@@ -32,6 +32,17 @@ export default function RootStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        component={MainTab}
+        name="MainTab"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={CreateScreen}
+        name="Create"
+        options={{headerTitle: '개체등록'}}
+      />
+      <Stack.Screen component={DetailScreen} name="Detail" />
+      <Stack.Screen
         component={SignInScreen}
         name="SignIn"
         options={{headerShown: false}}
@@ -43,13 +54,6 @@ export default function RootStack() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        component={MainTab}
-        name="MainTab"
-        options={{headerShown: false}}
-      />
-      <Stack.Screen component={CreateScreen} name="Create" />
-      <Stack.Screen component={DetailScreen} name="Detail" />
     </Stack.Navigator>
   );
 }
