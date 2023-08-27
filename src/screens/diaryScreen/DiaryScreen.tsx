@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Button, StyleSheet, View} from 'react-native';
+import {Button, SafeAreaView, StyleSheet, View} from 'react-native';
 
 import {RootStackNavigationProp} from '../RootStack';
 import Empty from '../../components/Empty';
@@ -26,6 +26,7 @@ export default function DiaryScreen() {
   const goCreateScreen = () => {
     navigation.navigate('Create');
   };
+
   const goSignInScreen = () => {
     navigation.navigate('SignIn');
   };
@@ -38,10 +39,10 @@ export default function DiaryScreen() {
       console.log('error :>> ', error);
     }
   };
-
   const isEmpty = pets.length === 0;
+
   return (
-    <View style={styles.block}>
+    <SafeAreaView style={styles.block}>
       {isEmpty ? <Empty /> : <PetList pets={pets} />}
       {isLoggedIn ? (
         <CustomButton title="개체 등록하기" onPress={goCreateScreen} />
@@ -55,10 +56,10 @@ export default function DiaryScreen() {
       )}
 
       <Button title="로그 아웃" onPress={logout} />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  block: {flex: 1, backgroundColor: 'red'},
+  block: {flex: 1},
 });
