@@ -32,7 +32,7 @@ export default function Modal({
         onRequestClose={() => {
           onClose();
         }}>
-        <View style={styles.mask}>
+        <Pressable style={styles.mask} onPress={onClose}>
           <View style={[styles.block]}>
             <Text style={styles.modalText}>{description}</Text>
             <View style={styles.buttonWrapper}>
@@ -51,7 +51,7 @@ export default function Modal({
               </Pressable>
             </View>
           </View>
-        </View>
+        </Pressable>
       </ReactNativeModal>
     </>
   );
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   block: {
     marginTop: -200,
