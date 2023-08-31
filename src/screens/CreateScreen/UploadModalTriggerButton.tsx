@@ -10,14 +10,45 @@ import {
 import UploadModal from './UploadModal';
 import {useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {
+  launchImageLibrary,
+  launchCamera,
+  ImagePickerResponse,
+  Asset,
+} from 'react-native-image-picker';
 
 interface Props {
-  onUpload: () => void;
+  onUpload: (assetList: Asset[]) => void;
   title: string;
 }
 
+const imagePickerOption = {
+  mediaType: 'photo',
+  maxWith: 768,
+  maxHeight: 768,
+  includeBase64: Platform.OS === 'android',
+} as const;
+
 export default function UploadModalTriggerButton({title, onUpload}: Props) {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const onPickImage = (res: ImagePickerResponse) => {
+    if (res.didCancel || !res) {
+      return;
+    }
+
+    if (res.assets) {
+      onUpload(res.assets);
+    }
+  };
+
+  const onLaunchCamera = () => {
+    launchCamera(imagePickerOption, onPickImage);
+  };
+
+  const onLaunchImageLibrary = () => {
+    launchImageLibrary(imagePickerOption, onPickImage);
+  };
 
   const onPress = () => {
     if (Platform.OS === 'android') {
@@ -48,6 +79,8 @@ export default function UploadModalTriggerButton({title, onUpload}: Props) {
     <View style={styles.block}>
       <UploadModal // android 환경
         visible={modalVisible}
+        onLaunchCamera={onLaunchCamera}
+        onLaunchImageLibrary={onLaunchImageLibrary}
         onClose={() => setModalVisible(false)}
       />
       <Pressable style={styles.imageUpload} onPress={onPress}>
