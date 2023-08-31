@@ -6,9 +6,16 @@ import {color} from '../../theme/style';
 interface Props {
   visible: boolean;
   onClose: () => void;
+  onLaunchCamera: () => void;
+  onLaunchImageLibrary: () => void;
 }
 
-export default function UploadModal({visible, onClose}: Props) {
+export default function UploadModal({
+  visible,
+  onLaunchCamera,
+  onLaunchImageLibrary,
+  onClose,
+}: Props) {
   return (
     <Modal
       animationType="fade"
@@ -22,6 +29,7 @@ export default function UploadModal({visible, onClose}: Props) {
           <Pressable
             style={styles.actionButton}
             onPress={() => {
+              onLaunchCamera();
               onClose();
             }}>
             <Icon name="camera-alt" size={32} style={styles.icon} />
@@ -31,6 +39,7 @@ export default function UploadModal({visible, onClose}: Props) {
           <Pressable
             style={styles.actionButton}
             onPress={() => {
+              onLaunchImageLibrary();
               onClose();
             }}>
             <Icon name="photo" size={32} style={styles.icon} />
