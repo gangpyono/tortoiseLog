@@ -7,7 +7,7 @@ import {
 import SignUpScreen from './SignUpScreen';
 import SignInScreen from './SignInScreen';
 import MainTab, {MainTabNavigationScreenParams} from './MainTab';
-import CreateScreen from './CreateScreen';
+import CreateScreen from './createScreen/CreateScreen';
 import DetailScreen from './DetailScreen';
 
 // interfacer가 아닌 type으로 선언해야한다.
