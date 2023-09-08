@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActionSheetIOS,
+  Image,
   Platform,
   Pressable,
   StyleSheet,
@@ -14,11 +15,10 @@ import {
   launchImageLibrary,
   launchCamera,
   ImagePickerResponse,
-  Asset,
 } from 'react-native-image-picker';
 
 interface Props {
-  onUpload: (assetList: Asset[]) => void;
+  onUpload: (uri: string) => void;
   title: string;
 }
 
@@ -31,14 +31,16 @@ const imagePickerOption = {
 
 export default function UploadModalTriggerButton({title, onUpload}: Props) {
   const [modalVisible, setModalVisible] = useState(false);
+  const [imageUri, setImageUri] = useState('');
 
   const onPickImage = (res: ImagePickerResponse) => {
     if (res.didCancel || !res) {
       return;
     }
 
-    if (res.assets) {
-      onUpload(res.assets);
+    if (res.assets && res.assets[0].uri) {
+      onUpload(res.assets[0].uri);
+      setImageUri(res.assets[0].uri);
     }
   };
 
@@ -75,30 +77,48 @@ export default function UploadModalTriggerButton({title, onUpload}: Props) {
     );
   };
 
+  const imageComponent = imageUri ? (
+    <Image style={styles.circle} source={{uri: imageUri}} />
+  ) : (
+    <View style={[styles.circle, styles.center]}>
+      <Icon name="camera-alt" size={32} />
+      <Text>{title}</Text>
+    </View>
+  );
+
   return (
-    <View style={styles.block}>
-      <UploadModal // android 환경
-        visible={modalVisible}
-        onLaunchCamera={onLaunchCamera}
-        onLaunchImageLibrary={onLaunchImageLibrary}
-        onClose={() => setModalVisible(false)}
-      />
-      <Pressable style={styles.imageUpload} onPress={onPress}>
-        <Icon name="camera-alt" size={32} />
-        <Text>{title}</Text>
+    <View>
+      {Platform.OS === 'android' && (
+        <UploadModal
+          visible={modalVisible}
+          onLaunchCamera={onLaunchCamera}
+          onLaunchImageLibrary={onLaunchImageLibrary}
+          onClose={() => setModalVisible(false)}
+        />
+      )}
+
+      <Pressable onPress={onPress}>
+        <View style={styles.center}>{imageComponent}</View>
       </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  block: {
-    flex: 1,
-  },
   imageUpload: {
     padding: 12,
     backgroundColor: 'red',
     alignItems: 'center',
     borderRadius: 8,
+  },
+  circle: {
+    backgroundColor: '#cdcdcd',
+    borderRadius: 64,
+    width: 128,
+    height: 128,
+  },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
