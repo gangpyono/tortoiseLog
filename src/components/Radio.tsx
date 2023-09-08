@@ -25,8 +25,9 @@ export type RadioOptionType = {
 interface RadioGroupProps {
   options: RadioOptionType[];
   onPress: (target: RadioOptionType) => void;
+  row?: boolean;
 }
-function RadioGroup({options, onPress}: RadioGroupProps) {
+function RadioGroup({options, onPress, row}: RadioGroupProps) {
   const [selectedOption, setSelectedOption] = useState(options[0].id);
 
   const handleRadioPress = (id: string) => {
@@ -40,7 +41,7 @@ function RadioGroup({options, onPress}: RadioGroupProps) {
   };
 
   return (
-    <View>
+    <View style={row ? styles.row : {}}>
       {options.map(option => (
         <Radio
           key={option.id}
@@ -76,6 +77,10 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     backgroundColor: '#007AFF',
+  },
+  row: {
+    flexDirection: 'row',
+    gap: 10,
   },
 });
 
